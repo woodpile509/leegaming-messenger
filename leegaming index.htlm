@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Clara Lee Gaming Messenger</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #1a2a6c, #b21f1f, #fdbb2d);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .app-container {
+            display: flex;
+            gap: 20px;
+            max-width: 900px;
+            width: 100%;
+        }
+        
+        #chat-container {
+            width: 380px;
+            height: 700px;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 15px 50px rgba(0, 0, 0, 0.3);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+        
+        /* Chat Header */
+        #chat-header {
+            background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+            color: white;
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        .profile-pic {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: linear-gradient(45deg, #ff9a9e, #fad0c4);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            color: white;
+            border: 3px solid rgba(255, 255, 255, 0.3);
+        }
+        
+        .header-text h2 {
+            margin: 0;
+            font-size: 20px;
+            font-weight: 700;
+        }
+        
+        .header-text p {
+            margin: 5px 0 0 0;
+            font-size: 13px;
+            opacity: 0.9;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            background: #4ade80;
+            border-radius: 50%;
+            display: inline-block;
+        }
+        
+        /* Messages Area */
+        #chat-messages {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+            background: #f8f9fa;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        
+        .message {
+            max-width: 80%;
+            padding: 12px 16px;
+            border-radius: 18px;
+            line-height: 1.4;
+            position: relative;
+            word-wrap: break-word;
+            animation: fadeIn 0.3s ease;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .bot-message {
+            background: white;
+            border: 1px solid #e5e7eb;
+            border-bottom-left-radius: 5px;
+            align-self: flex-start;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        }
+        
+        .user-message {
+            background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+            color: white;
+            border-bottom-right-radius: 5px;
+            align-self: flex-end;
+            box-shadow: 0 2px 8px rgba(37, 117, 252, 0.3);
+        }
+        
+        .message-time {
+            font-size: 11px;
+            opacity: 0.7;
+            margin-top: 5px;
+            text-align: right;
+        }
+        
+        /* Input Area */
+        #message-form {
+            display: flex;
+            padding: 16px;
+            background: white;
+            border-top: 1px solid #f1f1f1;
+            gap: 10px;
+        }
+        
+        #user-message {
+            flex: 1;
+            padding: 14px 20px;
+            border: 1.5px solid #e5e7eb;
+            border-radius: 25px;
+            font-size: 15px;
+            outline: none;
+            transition: all 0.3s ease;
+        }
+        
+        #user-message:focus {
+            border-color: #6a11cb;
+            box-shadow: 0 0 0 3px rgba(106, 17, 203, 0.1);
+        }
+        
+        button {
+            padding: 14px 20px;
+            background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 18px;
+            transition: all 0.2s ease;
+            width: 50px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(37, 117, 252, 0.3);
+        }
+        
+        /* Response Panel */
+        .response-panel {
+            flex: 1;
+            background: white;
+            border-radius: 20px;
+            padding: 25px;
+            box-shadow: 0 15px 50px rgba(0, 0, 0, 0.3);
+            display: flex;
+            flex-direction: column;
+            max-width: 400px;
+        }
+        
+        .response-panel h3 {
+            color: #2d3748;
+            margin-bottom: 20px;
+            font-size: 22px;
+            text-align: center;
+        }
+        
+        .response-panel textarea {
+            flex: 1;
+            padding: 20px;
+            border: 2px solid #e5e7eb;
+            border-radius: 15px;
+            font-size: 16px;
+            outline: none;
+            resize: none;
+            margin-bottom: 15px;
+            transition: all 0.3s ease;
+        }
+        
+        .response-panel textarea:focus {
+            border-color: #6a11cb;
+            box-shadow: 0 0 0 3px rgba(106, 17, 203, 0.1);
+        }
+        
+        .send-as-bot {
+            background: linear-gradient(135deg, #00b894 0%, #00a085 100%);
+            color: white;
+            border: none;
+            padding: 16px;
+            border-radius: 12px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        
+        .send-as-bot:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 184, 148, 0.4);
+        }
+        
+        /* Quick Responses */
+        .quick-responses {
+            margin-top: 20px;
+        }
+        
+        .quick-responses h4 {
+            color: #4a5568;
+            margin-bottom: 12px;
+            font-size: 16px;
+        }
+        
+        .quick-response-btn {
+            background: #f7fafc;
+            border: 1px solid #e2e8f0;
+            padding: 10px 15px;
+            border-radius: 8px;
+            cursor: pointer;
+            margin: 5px;
+            font-size: 14px;
+            transition: all 0.2s ease;
+        }
+        
+        .quick-response-btn:hover {
+            background: #edf2f7;
+            border-color: #cbd5e0;
+        }
+        
+        /* Scrollbar */
+        #chat-messages::-webkit-scrollbar {
+            width: 6px;
+        }
+        
+        #chat-messages::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 10px;
+        }
+        
+        #chat-messages::-webkit-scrollbar-thumb {
+            background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+            border-radius: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <!-- Main Chat Container -->
+        <div id="chat-container">
+            <div id="chat-header">
+                <div class="profile-pic">
+                    <i class="fas fa-gamepad"></i>
+                </div>
+                <div class="header-text">
+                    <h2>Clara Lee Gaming</h2>
+                    <p><span class="status-dot"></span> Online • Replies instantly</p>
+                </div>
+            </div>
+            
+            <div id="chat-messages">
+                <div class="message bot-message">
+                    <p>Hey there! 👋 Welcome to Clara Lee Gaming messenger!</p>
+                    <div class="message-time" id="current-time">10:00 AM</div>
+                </div>
+                <div class="message bot-message">
+                    <p>How can I help you today? You can ask about streaming, games, or support options!</p>
+                    <div class="message-time">10:00 AM</div>
+                </div>
+            </div>
+            
+            <form id="message-form">
+                <input type="text" id="user-message" placeholder="Type your message..." autocomplete="off" autofocus>
+                <button type="submit">
+                    <i class="fas fa-paper-plane"></i>
+                </button>
+            </form>
+        </div>
+
+        <!-- Response Panel -->
+        <div class="response-panel">
+            <h3><i class="fas fa-robot"></i> Send as Clara Lee</h3>
+            <textarea id="bot-response" placeholder="Type your response as Clara Lee Gaming here..."></textarea>
+            <button class="send-as-bot" id="send-bot-response">
+                <i class="fas fa-paper-plane"></i> Send as Clara Lee
+            </button>
+            
+            <div class="quick-responses">
+                <h4>Quick Responses:</h4>
+                <button class="quick-response-btn" data-response="Thanks for your message! How can I help you today?">Quick Reply</button>
+                <button class="quick-response-btn" data-response="I usually stream Monday, Wednesday, and Friday at 7 PM EST!">Stream Schedule</button>
+                <button class="quick-response-btn" data-response="You can subscribe using the links in my video descriptions!">Subscription Info</button>
+                <button class="quick-response-btn" data-response="Thanks for wanting to support! For payments, use: Cash App: $YourTag or Chime: @YourTag">Payment Info</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Set initial time
+        document.getElementById('current-time').textContent = getCurrentTime();
+        
+        // User message form
+        document.getElementById('message-form').addEventListener('submit', function(event) {
+            event.preventDefault();
+            const userInput = document.getElementById('user-message');
+            const message = userInput.value.trim();
+            
+            if (message) {
+                addMessage(message, true);
+                userInput.value = '';
+            }
+        });
+        
+        // Bot response form
+        document.getElementById('send-bot-response').addEventListener('click', function() {
+            const botResponse = document.getElementById('bot-response').value.trim();
+            
+            if (botResponse) {
+                addMessage(botResponse, false);
+                document.getElementById('bot-response').value = '';
+            }
+        });
+        
+        // Quick response buttons
+        document.querySelectorAll('.quick-response-btn').forEach(button => {
+            button.addEventListener('click', function() {
+                const response = this.getAttribute('data-response');
+                document.getElementById('bot-response').value = response;
+            });
+        });
+        
+        // Add message function
+        function addMessage(text, isUser) {
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message ${isUser ? 'user-message' : 'bot-message'}`;
+            
+            const messageText = document.createElement('p');
+            messageText.textContent = text;
+            
+            const messageTime = document.createElement('div');
+            messageTime.className = 'message-time';
+            messageTime.textContent = getCurrentTime();
+            
+            messageDiv.appendChild(messageText);
+            messageDiv.appendChild(messageTime);
+            document.getElementById('chat-messages').appendChild(messageDiv);
+            
+            // Scroll to bottom
+            const container = document.getElementById('chat-messages');
+            container.scrollTop = container.scrollHeight;
+        }
+        
+        // Get current time
+        function getCurrentTime() {
+            const now = new Date();
+            return now.getHours().toString().padStart(2, '0') + ':' + 
+                   now.getMinutes().toString().padStart(2, '0');
+        }
+        
+        // Allow sending with Enter key (user message)
+        document.getElementById('user-message').addEventListener('keypress', function(event) {
+            if (event.key === 'Enter') {
+                document.getElementById('message-form').dispatchEvent(new Event('submit'));
+            }
+        });
+        
+        // Allow sending with Ctrl+Enter (bot response)
+        document.getElementById('bot-response').addEventListener('keydown', function(event) {
+            if (event.key === 'Enter' && event.ctrlKey) {
+                document.getElementById('send-bot-response').click();
+            }
+        });
+    </script>
+</body>
+</html>
